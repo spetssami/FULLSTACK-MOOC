@@ -6,11 +6,40 @@ const Statistics = ({reviews}) => {
   const {good, bad, neutral} = reviews;
   return (
     <div>
-      <p>avg {(good*1-bad*1)/(good+bad+neutral)}</p>
-      <p>positive {good/(bad+neutral)}%</p>
+      <table>
+        <tbody>
+        <tr>
+          <td>all</td>
+          <td>{good+bad+neutral}</td>
+        </tr>
+        <tr>
+          <td>avg</td>
+          <td>{Math.round((good*1-bad*1)/(good+bad+neutral)*10)/10}</td>
+        </tr>
+        <tr>
+          <td>positive</td>
+          <td>{Math.round(good/(good+bad+neutral)*1000)/10}%</td>
+        </tr>
+        </tbody>
+      </table>
+      
     </div>
   )
 }
+
+const Button = (props) => {
+  return (
+    <button onClick = {props.onClick}> {props.text} </button>
+  )
+}
+
+const Static = ({text, value}) => {
+  return (
+    <p>{text} {value}</p>
+  )
+}
+
+
 
 const App = () => {
   // tallenna napit omaan tilaansa
@@ -18,25 +47,21 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
-  const reviews = {
-    good: good,
-    neutral: neutral,
-    bad: bad
-  }
+  const reviews = {good, neutral, bad}
+  
   
   
   if(good !=0 || neutral != 0 || bad != 0 ){
     return (
       <div>
       <h1>Give feedback</h1>
-      <button onClick={() => setGood(good +1)}>Good</button>
-      <button onClick={() => setNeutral(neutral +1)}>Neutral</button>
-      <button onClick={() => setBad(bad +1)}>Bad</button>
+      <Button onClick={() => setGood(good+1)} text="good" />
+      <Button onClick={() => setNeutral(neutral +1)} text="neutral"/>
+      <Button onClick={() => setBad(bad +1)} text="bad" />
       <h1>Statistics</h1>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {good+bad+neutral}</p>
+      <Static text="good" value = {good} /> 
+      <Static text="neutral" value = {neutral}/>
+      <Static text="bad" value = {bad} />
       <Statistics reviews = {reviews}/>
       </div>
     )
@@ -44,9 +69,9 @@ const App = () => {
     return (
       <div>
         <h1>Give feedback</h1>
-        <button onClick={() => setGood(good +1)}>Good</button>
-        <button onClick={() => setNeutral(neutral +1)}>Neutral</button>
-        <button onClick={() => setBad(bad +1)}>Bad</button>
+        <Button onClick={() => setGood(good+1)} text="good" />
+        <Button onClick={() => setNeutral(neutral +1)} text="neutral"/>
+        <Button onClick={() => setBad(bad +1)} text="bad" />
         <h1>Statistics</h1>
         <p>No feedback given</p>
       </div>
