@@ -9,7 +9,7 @@ const App = () => {
   ]) 
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber] = useState('');
-  const [searchfield, setSearchfield] = useState('');
+  const [ searchfield, setSearchfield] = useState('');
 
   function found(name) {
     let isIncluded = false;
@@ -20,6 +20,10 @@ const App = () => {
     });
     return isIncluded; 
   }
+
+  const filtered = persons.filter((person) => 
+    person.name.toLocaleLowerCase().includes(searchfield.toLocaleLowerCase())
+  )
   
   const handleNameChange = (event) => {
     setNewName(event.target.value);   
@@ -28,15 +32,10 @@ const App = () => {
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value);
   }
-
-  const handleSearchfield = (event) => {
-    setSearchfield(event.target.value);
-    filteredPeople;
+  
+  const handleSearchfieldChange = (event) => {
+    setSearchfield(event.target.value)
   }
-
-  const filteredPeople = persons.filter(person =>{
-    return person.name.toLowerCase().includes(searchfield.toLowerCase())
-  })
 
   const formSubmit = (event) => {
     event.preventDefault();
@@ -53,14 +52,21 @@ const App = () => {
     }
   }
 
-const addPersons = persons.map((person) => {
-  return <p>{person.name} {person.number}</p>
-})
+const People = ({list}) => {
+  const people = list.map((person) => {
+    return <li>{person.name} {person.number}</li>
+  })
+  return(
+    <div>
+      {people}
+    </div>
+  )
+}
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <p>Searchfield <input onChange={handleSearchfield}/></p>
+      <p>Filter: <input onChange={handleSearchfieldChange}/></p>
       <form onSubmit ={formSubmit}>
         <div>
           name: <input onChange={handleNameChange}/>
@@ -72,7 +78,7 @@ const addPersons = persons.map((person) => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {addPersons}
+      <People list={filtered}/>
     </div>
   )
 
