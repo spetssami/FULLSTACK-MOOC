@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import People from './People'
+import Form from './Form'
+import Filter from './Filter'
 
 const App = () => {
   const [ persons, setPersons] = useState([
@@ -11,6 +14,24 @@ const App = () => {
   const [ newNumber, setNewNumber] = useState('');
   const [ searchfield, setSearchfield] = useState('');
 
+
+
+  const filtered = persons.filter((person) => 
+    person.name.toLocaleLowerCase().includes(searchfield.toLocaleLowerCase())
+  )
+  
+  const handleSearchfieldChange = (event) => {
+    setSearchfield(event.target.value)
+  }
+
+  const handleNameChange = (event) => {
+    setNewName(event.target.value);   
+  }
+
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value);
+  }
+  
   function found(name) {
     let isIncluded = false;
     persons.find((person) => {
@@ -19,22 +40,6 @@ const App = () => {
       }
     });
     return isIncluded; 
-  }
-
-  const filtered = persons.filter((person) => 
-    person.name.toLocaleLowerCase().includes(searchfield.toLocaleLowerCase())
-  )
-  
-  const handleNameChange = (event) => {
-    setNewName(event.target.value);   
-  }
-  
-  const handleNumberChange = (event) => {
-    setNewNumber(event.target.value);
-  }
-  
-  const handleSearchfieldChange = (event) => {
-    setSearchfield(event.target.value)
   }
 
   const formSubmit = (event) => {
@@ -52,32 +57,14 @@ const App = () => {
     }
   }
 
-const People = ({list}) => {
-  const people = list.map((person) => {
-    return <li>{person.name} {person.number}</li>
-  })
-  return(
-    <div>
-      {people}
-    </div>
-  )
-}
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <p>Filter: <input onChange={handleSearchfieldChange}/></p>
-      <form onSubmit ={formSubmit}>
-        <div>
-          name: <input onChange={handleNameChange}/>
-          <br/>
-          number: <input onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
+      <Filter handleSearchfieldChange={handleSearchfieldChange}/>
+      <h3>Add new number</h3>
+      <Form handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} formSubmit={formSubmit}/>
+      <h3>Numbers</h3>
       <People list={filtered}/>
     </div>
   )
