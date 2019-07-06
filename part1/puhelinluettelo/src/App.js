@@ -1,20 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import People from './People'
 import Form from './Form'
 import Filter from './Filter'
+import axios from 'axios';
 
 const App = () => {
-  const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '123-213-000'},
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ]) 
+
+  const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber] = useState('');
   const [ searchfield, setSearchfield] = useState('');
 
+  const effectHook = () => {
+    axios.get('http://localhost:3001/persons')
+      .then((json) =>{
+      setPersons(json.data)
+    })
+  }
 
+  useEffect(effectHook, [])
 
   const filtered = persons.filter((person) => 
     person.name.toLocaleLowerCase().includes(searchfield.toLocaleLowerCase())
