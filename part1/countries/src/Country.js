@@ -7,7 +7,7 @@ const Country = ({country}) => {
         return <ul>{lang.name}</ul>
     })
     return(
-        <div>
+        <div key={country.numericCode}>
             <h1>{name}</h1>
             <li>Capital {capital}</li>
             <li>Population {population}</li>

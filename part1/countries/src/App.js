@@ -28,7 +28,7 @@ const App = () => {
         } else{
             countries = (list.length <10) ? 
             list.map((country) => {
-                return <li>{country.name}</li>
+                return <li><strong>{country.name}</strong> <button onClick={() => setSearchfield(country.name)}>Show more</button></li> 
             }) : <p>Too many countries to be shown currently</p>
         }
         return countries;
