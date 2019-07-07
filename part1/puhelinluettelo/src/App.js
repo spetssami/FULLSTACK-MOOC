@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import People from './People'
 import Form from './Form'
 import Filter from './Filter'
-import axios from 'axios';
+import peopleService from './peopleService' 
 
 const App = () => {
 
@@ -12,7 +12,7 @@ const App = () => {
   const [ searchfield, setSearchfield] = useState('');
 
   const effectHook = () => {
-    axios.get('http://localhost:3001/persons')
+    peopleService.getPeople()
       .then((json) =>{
       setPersons(json.data)
     })
@@ -57,7 +57,11 @@ const App = () => {
         name,
         number
       }
-    setPersons(persons.concat(newPerson))
+    peopleService.addPerson(newPerson).then(res  => {
+      setPersons(persons.concat(res.data))
+      setNewName('')
+      setNewNumber('')
+    })
     }
   }
 
