@@ -8,9 +8,14 @@ const getPeople = () => {
 
 const addPerson = (newPerson) => {
     return axios.post(baseurl, newPerson)
-} 
+}
+
+const deletePerson = (id) => {
+    return axios.delete(`${baseurl}/${id}`)
+}
 
 export default {
     getPeople,
-    addPerson
+    addPerson,
+    deletePerson
 }
