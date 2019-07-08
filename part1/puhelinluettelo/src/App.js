@@ -53,7 +53,11 @@ const App = () => {
 
   const formSubmit = (event) => {
     event.preventDefault();
-    const name = newName
+    const name = newName.trim()
+    if(name.length === 0){
+      setErrorMessage('Enter a name please'); setTimeout(() => {setErrorMessage(null)}, 5000)
+      return null;
+    }
     const number = newNumber;
     if(found(name) === null){
       const newPerson = {
