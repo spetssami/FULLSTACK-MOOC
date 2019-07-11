@@ -25,8 +25,8 @@ const App = () => {
 
   useEffect(effectHook, [])
 
-  const filtered = persons.filter((person) => {
-    return person.name.toLocaleLowerCase().includes(searchfield.toLocaleLowerCase())
+  const filtered = persons.filter((dude) => {
+    return dude.name.toLocaleLowerCase().includes(searchfield.toLocaleLowerCase())
   })
   
   const handleSearchfieldChange = (event) => {
@@ -73,9 +73,23 @@ const App = () => {
         setTimeout(() => {setSuccesMessage(null); setBoolMessage(null)}, 5000);
       })
     } else {
+
       const id = found(name).id
       if(window.confirm(`Do you want to update ${name} contact info`)){
-        peopleService.updatePerson(id, name, number);
+        peopleService.updatePerson(id, name, number).then(res => {
+          console.log(res);
+          setErrorMessage(`${name} successfully updated`);
+          setBoolMessage(true);
+          setTimeout(() => {setErrorMessage(null); setBoolMessage(null)}, 5000);
+          let list =[];
+          for(var i=0; i<persons.length; i++){
+            list.push(persons[i])
+            if(persons[i].id === id){
+              list[i] = res;
+            }
+          }
+          setPersons(list)
+        })
       } else {
         setNewName(null);
         setBoolMessage(false);

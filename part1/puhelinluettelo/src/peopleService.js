@@ -13,10 +13,10 @@ const addPerson = (newPerson) => {
 const deletePerson = (id) => {
     return axios.delete(`${baseurl}/${id}`)
 }
-const updatePerson = (id, name, number) => {
+const updatePerson = async (id, name, number) => {
     console.log(name, number, id);
-    return axios.put(`${baseurl}/${id}`, {name, number})
-        .then(res => res.data)
+    const res = await axios.put(`${baseurl}/${id}`, { name, number });
+    return res.data;
 }
 
 export default {
