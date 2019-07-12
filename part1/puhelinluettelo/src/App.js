@@ -76,11 +76,13 @@ const App = () => {
 
       const id = found(name).id
       if(window.confirm(`Do you want to update ${name} contact info`)){
-        peopleService.updatePerson(id, name, number).then(res => {
-          console.log(res);
+
+        peopleService.updatePerson(id, name, number)
+          .then(res => {
           setErrorMessage(`${name} successfully updated`);
           setBoolMessage(true);
           setTimeout(() => {setErrorMessage(null); setBoolMessage(null)}, 5000);
+
           let list =[];
           for(var i=0; i<persons.length; i++){
             list.push(persons[i])
@@ -90,6 +92,7 @@ const App = () => {
           }
           setPersons(list)
         })
+
       } else {
         setNewName(null);
         setBoolMessage(false);
