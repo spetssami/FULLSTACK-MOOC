@@ -25,8 +25,8 @@ const App = () => {
 
   useEffect(effectHook, [])
 
-  const filtered = persons.filter((person) => {
-    return person.name.toLocaleLowerCase().includes(searchfield.toLocaleLowerCase())
+  const filtered = persons.filter((dude) => {
+    return dude.name.toLocaleLowerCase().includes(searchfield.toLocaleLowerCase())
   })
   
   const handleSearchfieldChange = (event) => {
@@ -54,11 +54,11 @@ const App = () => {
   const formSubmit = (event) => {
     event.preventDefault();
     const name = newName.trim()
+    const number = newNumber;
     if(name.length === 0){
-      setErrorMessage('Enter a name please'); setTimeout(() => {setErrorMessage(null)}, 5000)
+      setErrorMessage('Enter a name please'); setTimeout(() => {setErrorMessage(null)}, 5000);
       return null;
     }
-    const number = newNumber;
     if(found(name) === null){
       const newPerson = {
         name,
@@ -66,21 +66,37 @@ const App = () => {
       }
       peopleService.addPerson(newPerson).then(res  => {
         setPersons(persons.concat(res.data))
-        setNewName('')
-        setNewNumber('')
-        setSuccesMessage(`Added ${name} succesfully`)
-        setBoolMessage(true)
-        setTimeout(() => {setSuccesMessage(null); setBoolMessage(null)}, 5000)
+        setNewName('');
+        setNewNumber('');
+        setSuccesMessage(`Added ${name} succesfully`);
+        setBoolMessage(true);
+        setTimeout(() => {setSuccesMessage(null); setBoolMessage(null)}, 5000);
       })
     } else {
-      const person = found(name)
+
+      const id = found(name).id
       if(window.confirm(`Do you want to update ${name} contact info`)){
-        peopleService.updatePerson(person)
+
+        peopleService.updatePerson(id, name, number)
+          .then(res => {
+          setErrorMessage(`${name} successfully updated`);
+          setBoolMessage(true);
+          setTimeout(() => {setErrorMessage(null); setBoolMessage(null)}, 5000);
+
+          let list =[];
+          for(var i=0; i<persons.length; i++){
+            list.push(persons[i])
+            if(persons[i].id === id){
+              list[i] = res;
+            }
+          }
+          setPersons(list)
+        })
+
       } else {
-        setNewName(null)
-        setErrorMessage(`${name} is already in contact`)
-        setBoolMessage(false)
-        setTimeout(() => {setErrorMessage(null); setBoolMessage(null)}, 5000)
+        setNewName(null);
+        setBoolMessage(false);
+        setTimeout(() => {setErrorMessage(null); setBoolMessage(null)}, 5000);
     }//else
   }
 }
