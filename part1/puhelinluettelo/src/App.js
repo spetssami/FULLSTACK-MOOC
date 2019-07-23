@@ -29,6 +29,7 @@ const App = () => {
     return dude.name.toLocaleLowerCase().includes(searchfield.toLocaleLowerCase())
   })
   
+
   const handleSearchfieldChange = (event) => {
     setSearchfield(event.target.value)
   }
@@ -41,6 +42,7 @@ const App = () => {
     setNewNumber(event.target.value);
   }
   
+
   function found(name) {
     let isIncluded = null
     persons.find((person) => {
@@ -50,6 +52,7 @@ const App = () => {
     });
     return isIncluded; 
   }
+
 
   const formSubmit = (event) => {
     event.preventDefault();
@@ -73,7 +76,6 @@ const App = () => {
         setTimeout(() => {setSuccesMessage(null); setBoolMessage(null)}, 5000);
       })
     } else {
-
       const id = found(name).id
       if(window.confirm(`Do you want to update ${name} contact info`)){
 
@@ -92,7 +94,6 @@ const App = () => {
           }
           setPersons(list)
         })
-
       } else {
         setNewName(null);
         setBoolMessage(false);
@@ -102,16 +103,35 @@ const App = () => {
 }
 
 
+
+const deletePerson = (name) => {
+  const person = found(name);
+  if(window.confirm(`Confirm to remove ${person.name}`)){
+    peopleService.deletePerson(person.id)
+      .then(res => {
+        setErrorMessage(`${person.name} was succesfully removed`)
+        setBoolMessage(true)
+        setTimeout(() => {setErrorMessage(null); setBoolMessage(null)}, 5000)
+        setPersons(persons.filter(dude => dude.id !== person.id))
+      })
+      .catch(err => {
+        setErrorMessage(`ERROR: ${person.name} is already removed`)
+        setBoolMessage(false);
+        setTimeout(() => {setErrorMessage(null); setBoolMessage(null)}, 5000)
+      })
+  }
+}
+
   return (
     <div>
       <h2>Phonebook</h2>
       <Notification message={succesMessage} bool = {boolMessage} />
       <Notification message={errorMessage} bool = {boolMessage} />
-      <Filter handleSearchfieldChange={handleSearchfieldChange}/>
+      <Filter handleSearchfieldChange={handleSearchfieldChange} />
       <h3>Add new number</h3>
-      <Form handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} formSubmit={formSubmit}/>
+      <Form handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} formSubmit={formSubmit} />
       <h3>Numbers</h3>
-      <People list={filtered}/>
+      <People list={filtered} deletePerson={deletePerson} />
     </div>
   )
 
