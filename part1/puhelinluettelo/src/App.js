@@ -13,7 +13,6 @@ const App = () => {
         [ newNumber, setNewNumber] = useState(''),
         [ searchfield, setSearchfield] = useState(''),
         [ errorMessage, setErrorMessage] = useState(null),
-        [ succesMessage, setSuccesMessage] = useState(null),
         [ boolMessage, setBoolMessage ] = useState(null);
  
   const effectHook = () => {
@@ -63,18 +62,24 @@ const App = () => {
       return null;
     }
     if(found(name) === null){
-      const newPerson = {
-        name,
-        number
-      }
-      peopleService.addPerson(newPerson).then(res  => {
-        setPersons(persons.concat(res.data))
-        setNewName('');
-        setNewNumber('');
-        setSuccesMessage(`Added ${name} succesfully`);
-        setBoolMessage(true);
-        setTimeout(() => {setSuccesMessage(null); setBoolMessage(null)}, 5000);
-      })
+      
+        const newPerson = {
+          name,
+          number
+        }
+        peopleService.addPerson(newPerson).then(res  => {
+          setPersons(persons.concat(res.data))
+          setNewName('');
+          setNewNumber('');
+          setErrorMessage(`Added ${name} succesfully`);
+          setBoolMessage(true);
+          setTimeout(() => {setErrorMessage(null); setBoolMessage(null)}, 5000);
+        }).catch(err => {
+          console.log(err)
+          setErrorMessage('Error: Check that inputs are valid');
+          setBoolMessage(false);
+          setTimeout(() => {setErrorMessage(null); setBoolMessage(null)}, 6000);
+        })
     } else {
       const id = found(name).id
       if(window.confirm(`Do you want to update ${name} contact info`)){
@@ -125,7 +130,6 @@ const deletePerson = (name) => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={succesMessage} bool = {boolMessage} />
       <Notification message={errorMessage} bool = {boolMessage} />
       <Filter handleSearchfieldChange={handleSearchfieldChange} />
       <h3>Add new number</h3>
